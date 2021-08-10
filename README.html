@@ -169,11 +169,41 @@ pre code {
 
 <div id="dga-ksandr-api" class="section level1">
 <h1>dga-ksandr-api</h1>
-<p>api for dga tool integration on ksandr intranet</p>
+<p>api for DGA tool integration on Ksandr intranet</p>
 </div>
 <div id="install" class="section level1">
 <h1>Install</h1>
-<p>1 - Rstudio and R 2 - Install Docker <a href="https://docs.docker.com/engine/install/ubuntu/" class="uri">https://docs.docker.com/engine/install/ubuntu/</a></p>
+<p>1 - Rstudio and R <a href="https://www.r-bloggers.com/2013/03/download-and-install-r-in-ubuntu/" class="uri">https://www.r-bloggers.com/2013/03/download-and-install-r-in-ubuntu/</a> 2 - Install Docker <a href="https://docs.docker.com/engine/install/ubuntu/" class="uri">https://docs.docker.com/engine/install/ubuntu/</a></p>
+</div>
+<div id="install-docker" class="section level1">
+<h1>Install docker</h1>
+<p>Before you install Docker Engine for the first time on a new host machine, you need to set up the Docker repository. Afterward, you can install and update Docker from the repository.</p>
+<pre class="sh"><code> sudo apt-get update
+
+ sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release</code></pre>
+<p>Add Docker’s official GPG key:</p>
+<pre><code>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</code></pre>
+<p>Use the following command to set up the stable repository.</p>
+<pre><code>echo \
+  &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</code></pre>
+<p>Install docker and test a simple container:</p>
+<pre><code> sudo apt-get update
+ sudo apt-get install docker-ce docker-ce-cli containerd.io
+ sudo docker run hello-world</code></pre>
+<p>```</p>
+</div>
+<div id="restart-container-when-booting-server" class="section level1">
+<h1>Restart container when booting server</h1>
+<p><a href="https://www.rplumber.io/articles/hosting.html" class="uri">https://www.rplumber.io/articles/hosting.html</a></p>
+<p>docker run –rm -p 8000:8000 rstudio/plumber</p>
+<p>For instance if you have a plumber file saved in your current directory called api.R, you could use the following command</p>
+<p>docker run –rm -p 8000:8000 -v <code>pwd</code>/api.R:/plumber.R rstudio/plumber /plumber.R</p>
 </div>
 
 
