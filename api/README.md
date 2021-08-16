@@ -1,7 +1,41 @@
 # dga-ksandr-api
-Dit project bevat 
 
-## Randvoorwaarden
+Deze api is ontwikkeld in opdracht van KSANDR. Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan van de verwachte parts per million (ppm) waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2) De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR.
+
+1.  `config`: model constanten
+2.  `dga`: source code DGA tool en api
+3.  `models`: DGA modellen
+4.  `tests`: test data
+
+## Gebruik
+
+Zorg ervoor dat R en Docker zijn geinstalleerd (zie hoofdstuk installatie).
+Bouw vervolgens eerst de image:
+
+```bash
+docker build api/ -t dga/1.0
+```
+
+Start de container:
+
+```bash
+docker run --rm -p 8000:8000 IMAGE_ID
+```
+
+Test de api:
+
+```bash
+curl -X POST "http://127.0.0.1:8991/voorspelling" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@single_trafo.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+```
+
+De verwachte response zijn de waarden van de sleutelgassen per uniek serienummer:
+
+```bash
+[{"UN":"102630","H2":"2.0808","CH4":"1.7275","C2H6":"0.346","C2H4":"0.346","C2H2":"0.3135"},{"UN":"102631","H2":"2.1187","CH4":"1.7691","C2H6":"0.349","C2H4":"0.4405","C2H2":"0.4782"}]
+```
+
+
+## Installatie
 
 ### Installeren Docker
 
@@ -36,6 +70,14 @@ Installeer Docker en test de "hello world" container.
  sudo apt-get update
  sudo apt-get install docker-ce docker-ce-cli containerd.io
  sudo docker run hello-world
+```
+
+Manage Docker as a non-root user
+
+```
+ sudo groupadd docker
+ sudo usermod -aG docker $USER
+ newgrp docker
 ```
 
 ### Installeren R 
