@@ -9,6 +9,9 @@
 .Ruserdata
 data/
 origineel/
+VoorspelDGA_V2.3.4/
+VoorspelDGA_V3.0.1/
+*.html
 
 # Example code in package build process
 *-Ex.R

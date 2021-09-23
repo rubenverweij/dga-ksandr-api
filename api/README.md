@@ -1,41 +1,41 @@
-# dga-ksandr-api
+# DGA-KSANDR-API
 
-Deze api is ontwikkeld in opdracht van KSANDR. Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan van de verwachte parts per million (ppm) waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2) De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR.
+1. [Gebruik](#use)
+2. [Installatie](#install)
+3. [Data transformaties](#data)
+4. [Data format](#format)
 
-1.  `config`: model constanten
+Deze api is ontwikkeld in opdracht van KSANDR. Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan van de verwachte parts per million (ppm) waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2) en het risicoprofiel. De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR.
+
+1.  `config`: configuratiebestanden en globale variabelen
 2.  `dga`: source code DGA tool en api
-3.  `models`: DGA modellen
+3.  `models`: DGA xgboost modellen
 4.  `tests`: test data
 
-## Gebruik
+## Gebruik <a name="use"></a>
 
-Zorg ervoor dat R en Docker zijn geinstalleerd (zie hoofdstuk installatie).
-Bouw vervolgens eerst de image:
+Wanneer de api container draait kan de api als volgt gebruikt worden:
+
+#### Test de api (excel)
 
 ```bash
-docker build api/ -t dga/1.0
+curl -X POST "http://127.0.0.1:8000/voorspelling" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@single_trafo.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 ```
 
-Start de container:
+#### test de api (json)
 
 ```bash
-docker run --rm -p 8000:8000 IMAGE_ID
-```
-
-Test de api:
-
-```bash
-curl -X POST "http://127.0.0.1:8991/voorspelling" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@single_trafo.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+curl -X POST "http://127.0.0.1:8000/voorspelling" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@single_trafo.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 ```
 
 De verwachte response zijn de waarden van de sleutelgassen per uniek serienummer:
 
-```bash
+```json
 [{"UN":"102630","H2":"2.0808","CH4":"1.7275","C2H6":"0.346","C2H4":"0.346","C2H2":"0.3135"},{"UN":"102631","H2":"2.1187","CH4":"1.7691","C2H6":"0.349","C2H4":"0.4405","C2H2":"0.4782"}]
 ```
 
 
-## Installatie
+## Installatie <a name="install"></a>
 
 ### Installeren Docker
 
@@ -56,7 +56,6 @@ Voeg de GPG key van Docker toe:
 ```bash
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 ```
-
 Configureer de repository.
 ```bash
 echo \
@@ -72,7 +71,7 @@ Installeer Docker en test de "hello world" container.
  sudo docker run hello-world
 ```
 
-Manage Docker as a non-root user
+Gebruik docker als non root gebruiker:
 
 ```
  sudo groupadd docker
@@ -101,20 +100,180 @@ Vervolgens kan R geinstalleerd worden:
 apt install --no-install-recommends r-base
 ```
 
-## Build image
+### Bouwen image en draaien api-server
 
-Om het image van de container te bouwen:
+Doorloop de volgende stappen:
+
+1.  Clone de repository.
+2.  Zorg ervoor dat R en Docker zijn geinstalleerd (zie hoofdstuk installatie).
+3.  Doorloop de onderstaande stappen:
+
 ```bash
-docker build -t api .
+# Bouw vervolgens eerst de image:
+docker build api/ -t dga/1.0
+
+# Controleer het `IMAGE_ID`:
+docker images
+
+# Start de container
+docker run --rm -p 8000:8000 IMAGE_ID
+
+# Controleer of de container applicatie draait
+docker ps
+
+# Breng de container down (vind het ID door "docker ps" te gebruiken)
+docker stop CONTAINER_IDs
 ```
 
+## Data transformaties <a name="data"></a>
 
+Op de ruwe data worden de volgende transformaties gedaan:
 
-# Restart container when booting server
-https://www.rplumber.io/articles/hosting.html
+```r
+# De kolomnamen die de DGA tool gebruikt zijn anders dan in de ruwe data
+  
+  # Stedin
+  KolomnummerH2 <<- 26
+  KolomnummerCH4 <<- 27
+  KolomnummerC2H6 <<- 28
+  KolomnummerC2H4 <<- 29
+  KolomnummerC2H2 <<- 30
+  KolomnummerCO <<- 35
+  KolomnummerBedrijfnummer <<- 2
+  KolomnummerApparaatsoort <<- 4
+  KolomnummerSerieNummer <<- 6
+  KolomnummerMerk <<- 7
+  KolomnummerPlaats <<- 8
+  KolomnummerEigenNummer <<- 9
+  KolomnummerBouwjaar <<- 10
+  KolomnummerOlieCode <<- 11
+  KolomnummerOlieNaam <<- 12
+  KolomnummerOlieSoort <<- 13
+  KolomnummerCategorie <<- 14
+  KolomnummerDatum <<- 22
+  KolomnummerAftappunt <<- 24
+  
+  # Tennet
+  KolomnummerH2 <<- 24
+  KolomnummerCH4 <<- 25
+  KolomnummerC2H6 <<- 26
+  KolomnummerC2H4 <<- 27
+  KolomnummerC2H2 <<- 28
+  KolomnummerCO <<- 33
+  KolomnummerBedrijfnummer <<- 16
+  KolomnummerApparaatsoort <<- 2
+  KolomnummerSerieNummer <<- 4
+  KolomnummerMerk <<- 5
+  KolomnummerPlaats <<- 6
+  KolomnummerEigenNummer <<- 7
+  KolomnummerBouwjaar <<- 8
+  KolomnummerOlieCode <<- 9
+  KolomnummerOlieNaam <<- 10
+  KolomnummerOlieSoort <<- 11
+  KolomnummerCategorie <<- 12
+  KolomnummerDatum <<- 20
+  KolomnummerAftappunt <<- 22
+  
+  # Enexis
+  KolomnummerH2 <<- 27
+  KolomnummerCH4 <<- 28
+  KolomnummerC2H6 <<- 29
+  KolomnummerC2H4 <<- 30
+  KolomnummerC2H2 <<- 31
+  KolomnummerCO <<- 36
+  KolomnummerBedrijfnummer <<- 2
+  KolomnummerApparaatsoort <<- 4
+  KolomnummerSerieNummer <<- 6
+  KolomnummerMerk <<- 7
+  KolomnummerPlaats <<- 8
+  KolomnummerEigenNummer <<- 9
+  KolomnummerBouwjaar <<- 10
+  KolomnummerOlieCode <<- 11
+  KolomnummerOlieNaam <<- 12
+  KolomnummerOlieSoort <<- 13
+  KolomnummerCategorie <<- 14
+  KolomnummerDatum <<- 23
+  KolomnummerAftappunt <<- 25
+  
+  # DNWG
+  KolomnummerH2 <<- 26
+  KolomnummerCH4 <<- 27
+  KolomnummerC2H6 <<- 28
+  KolomnummerC2H4 <<- 29
+  KolomnummerC2H2 <<- 30
+  KolomnummerCO <<- 35
+  KolomnummerBedrijfnummer <<- 2
+  KolomnummerApparaatsoort <<- 4
+  KolomnummerSerieNummer <<- 6
+  KolomnummerMerk <<- 7
+  KolomnummerPlaats <<- 8
+  KolomnummerEigenNummer <<- 9
+  KolomnummerBouwjaar <<- 10
+  KolomnummerOlieCode <<- 11
+  KolomnummerOlieNaam <<- 12
+  KolomnummerOlieSoort <<- 13
+  KolomnummerCategorie <<- 14
+  KolomnummerDatum <<- 22
+  KolomnummerAftappunt <<- 24
 
-docker run --rm -p 8000:8000 rstudio/plumber
+  # deze transformatie vervangt het kleiner dan teken: "<" voor "" van de volgende kolommen:
+  # dus "<3" wordt "3"
+  
+   $ H2                       : chr [1:18] "14.5" "15.8" "12.4" "10.8" ...
+   $ CH4                      : chr [1:18] "<1" "1.35" "4.8" "1.59" ...
+   $ C2H6                     : chr [1:18] "<1" "0.19" "0.14" "0.18" ...
+   $ C2H4                     : chr [1:18] "<1" "<0.1" "<0.1" "<0.1" ...
+   $ C2H2                     : chr [1:18] "<1" "<0.2" "<0.2" "<0.2" ...
+   $ CO                       : chr [1:18] "57" "120" "145" "138" ...
+   
+   vDim_string_numeric <- dim(df[c(KolomnummerH2,KolomnummerCH4,KolomnummerC2H6,KolomnummerC2H4,KolomnummerC2H2,KolomnummerCO)])
+df[c(KolomnummerH2,KolomnummerCH4,KolomnummerC2H6,KolomnummerC2H4,KolomnummerC2H2,KolomnummerCO)] <- matrix(as.numeric(gsub("<", "", as.matrix(df[c(KolomnummerH2,KolomnummerCH4,KolomnummerC2H6,KolomnummerC2H4,KolomnummerC2H2,KolomnummerCO)]))),nrow=vDim_string_numeric[1],ncol=vDim_string_numeric[2])
 
-For instance if you have a plumber file saved in your current directory called api.R, you could use the following command
+# De kolommen worden hernoemd
+colnames(df)[KolomnummerH2] <- "H2"
+colnames(df)[KolomnummerCH4] <- "CH4"
+colnames(df)[KolomnummerC2H6] <- "C2H6"
+colnames(df)[KolomnummerC2H4] <- "C2H4"
+colnames(df)[KolomnummerC2H2] <- "C2H2"
+colnames(df)[KolomnummerCO] <- "CO"
+colnames(df)[KolomnummerAftappunt] <- "Aftappunt"
+colnames(df)[KolomnummerMerk] <- "Merk"
 
-docker run --rm -p 8000:8000 -v `pwd`/api.R:/plumber.R rstudio/plumber /plumber.R
+# NA waarden worden gefilterd
+df <- subset(df, !(H2 == "NA" | CH4 == "NA" | C2H6 == "NA" | C2H4 == "NA" | C2H2 == "NA" ))
+
+# Aleen Aftappunt == "o" blijft over
+df <- subset(df, Aftappunt == "o")
+
+# Het datumveld wordt omgezet naar een datum format "%d-%m-%Y"
+df[,KolomnummerDatum] <- as.Date(df[,KolomnummerDatum,drop = TRUE], format= "%Y%m%d")
+df[,KolomnummerDatum] <- strftime(df[,KolomnummerDatum, drop =TRUE], "%d-%m-%Y")
+df[,KolomnummerDatum] <- as.Date( as.character(df[,KolomnummerDatum, drop =TRUE]), "%d-%m-%Y")
+
+# De kolommen worden hernoemd
+colnames(df)[KolomnummerDatum] <- "Datum"
+colnames(df)[KolomnummerSerieNummer] <- "SerieNr."
+colnames(df)[KolomnummerEigenNummer] <- "EigenNr."
+colnames(df)[KolomnummerPlaats] <- "Plaats"
+colnames(df)[KolomnummerBouwjaar] <- "Bouwjaar"
+colnames(df)[1] <- "UN"
+colnames(df)[KolomnummerOlieCode] <- "OlieCode"
+colnames(df)[KolomnummerOlieNaam] <- "olieNaam"
+colnames(df)[KolomnummerOlieSoort] <- "OlieSoort"
+colnames(df)[KolomnummerCategorie] <- "Categorie"
+
+# Aleen datums > "2000-01-01" worden behouden
+df <- subset(df, Datum >= as.Date("2000-01-01"))
+df[,KolomnummerDatum] <- strftime(df[,KolomnummerDatum, drop =TRUE], "%d-%m-%Y")
+
+# Het bouwjaar wordt omgezet naar een nieuw format
+df <- within(df, Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) < 30] <-
+               paste("20", substr(Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) < 30] , 1, 2), sep = ""))
+df <- within(df, Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) >= 30] <-
+               paste("19", substr(Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) >= 30] , 1, 2), sep = ""))
+
+# Alleen metingen met data$apparaat_soort ongelijk aan 'sl' overhouden
+data[ which(data$apparaat_soort != 'sl'), ]
+```
+
+## Data Format <a name="format"></a>

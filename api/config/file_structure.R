@@ -28,3 +28,9 @@ required_columns <- c(
   "zuurgetal_g_KOH_p_kg",
   "apparaat_soort"
 )
+
+kwantiel_h2 <- c(-Inf,3.5,5,7.5,10, 30, 88,210,1070,Inf)
+kwantiel_CH4 <- c(-Inf,2.5,5,7.5,10, 30, 24,59,322,Inf)
+kwantiel_C2H6 <- c(-Inf,0.5,1.5,3, 10, 24,38,123,659,Inf)
+kwantiel_C2H4 <- c(-Inf,0.5,2,3, 10, 24,61,90,720,Inf)
+kwantiel_C2H2 <- c(-Inf,0.5,2,3, 10, 20,27,90,182,Inf)
