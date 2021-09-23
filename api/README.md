@@ -266,7 +266,7 @@ colnames(df)[KolomnummerCategorie] <- "Categorie"
 df <- subset(df, Datum >= as.Date("2000-01-01"))
 df[,KolomnummerDatum] <- strftime(df[,KolomnummerDatum, drop =TRUE], "%d-%m-%Y")
 
-# Het bouwjaar wordt omgezet naar een nieuw format
+# Het bouwjaar wordt omgezet naar een nieuw format YYYY b.v. 2011
 df <- within(df, Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) < 30] <-
                paste("20", substr(Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) < 30] , 1, 2), sep = ""))
 df <- within(df, Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) >= 30] <-
@@ -274,6 +274,35 @@ df <- within(df, Bouwjaar[!is.na(Bouwjaar) &  substr(Bouwjaar, 1, 2) >= 30] <-
 
 # Alleen metingen met data$apparaat_soort ongelijk aan 'sl' overhouden
 data[ which(data$apparaat_soort != 'sl'), ]
+```
+
+Waarden die zijn toegestaan per variable:
+
+```r
+# Toegestane merken (kolom merk)
+# > unique(c(unique(mDf_tennet$Merk), unique(mDf_enexis$Merk), unique(mDf_stedin$Merk)))
+ [1] "BBC"              "Smit"             "Elin"             "ASEA"             "ACEC"             "AEG"             
+ [7] "Oerlikon"         "Ritz"             "Balteau"          "ABB"              "SGB"              "CGS"             
+[13] "Alstom"           "Trafo-Union"      "M.W.B."           "Siemens"          "Savoisienne"      "AEI"             
+[19] "Merlin-Gerin"     "Pauwels"          "Merk onbekend"    "C.G.E."           "Trench"           "Haefely"         
+[25] "Arteche"          "I.E.O."           "Tironi"           "COQ"              "Dietze-Afunk"     "Lepper"          
+[31] "ETRA"             "AREVA"            "Tamini"           "Helmke"           "HOLEC"            "Ganz"            
+[37] "BEZ"              "Ansaldo"          "English Electric" "MTC"              "Junker"           "Babcock"         
+[43] "HTT"              "Toshiba"          "CEM"              "SEA"              "Crompton Greaves" "Schorch"         
+[49] "StemTr-Schneider" "Dominit"          "Best Trafo"       "EBG"              "Fr. Transfo"      "Volta-Werke" 
+
+# Toegestane oliesoorten (kolom OlieSoort)
+# > unique(c(unique(mDf_tennet$OlieSoort), unique(mDf_enexis$OlieSoort), unique(mDf_stedin$OlieSoort)))
+ [1] "Diala D"               "Diala C"               "Diala B"               "Diala S2 ZU-I"         NA                     
+ [6] "Nytro Taurus"          "Diala GX"              "Nytro 10 XN"           "Nytro 10 GBN"          "US 3000 P"            
+[11] "Diala G"               "Transformer Oil TR 26" "Diekan 1500 N"         "Univolt 62"            "Diala S3 ZX-I"        
+[16] "Diala S4 ZX-I"         "Nytro 3000"            "Nytro Libra"           "Diala M"               "Nytro Gemini X"       
+[21] "7131"
+
+# Toegestane Markerkleur
+> unique(c(unique(mDf_tennet$Markerkleur), unique(mDf_enexis$Markerkleur), unique(mDf_stedin$Markerkleur)))
+labels = c("green" = 1,"orange"= 2,"red" = 3,"purple" = 4))
+
 ```
 
 ## Data Format <a name="format"></a>

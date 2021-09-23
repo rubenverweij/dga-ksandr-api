@@ -1,6 +1,6 @@
 library(plyr)
 
-source("select_vars.R")
+source("api-select_vars.R")
 
 create_features <- function(data) {
   data <- select_vars(data)

@@ -14,15 +14,17 @@ library(plumber)
 library(tidyr)
 library(plyr)
 library(xgboost)
+library(jsonlite)
+library(data.table)
 
-source("transform_data.R")
-source("voorspel_dga.R")
+source("api-transform_data.R")
+source("api-voorspel_dga.R")
 
 
 
 #* DGA  sleutelgas voorspelling voor transformatoren
 #* @param f:file
-#* @post /voorspelling
+#* @post /voorspelling_excel
 #* @serializer json
 function(f) {
   
@@ -37,4 +39,18 @@ function(f) {
   prediction$mForecast %>%
     dplyr::distinct(UN, .keep_all = TRUE)
 
+}
+
+
+#* DGA  sleutelgas voorspelling voor transformatoren
+#* @post /voorspelling_json
+#* @serializer json
+function(f) {
+  
+  # Read, transform and predict
+  json <- fromJSON(f) %>% as.data.frame
+  data_transformed <- transform_data(json)
+  prediction <- voorspel_dga(data_transformed)
+  prediction$mForecast %>%
+    dplyr::distinct(UN, .keep_all = TRUE)
 }

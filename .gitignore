@@ -8,6 +8,7 @@
 # User-specific files
 .Ruserdata
 data/
+archive/
 origineel/
 VoorspelDGA_V2.3.4/
 VoorspelDGA_V3.0.1/
