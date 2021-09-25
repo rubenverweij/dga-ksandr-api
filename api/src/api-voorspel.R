@@ -7,6 +7,7 @@ voorspel <- function(data_xgboost, Y){
   data_xgboost <- data_xgboost[[1]]
   model_name <- paste0('../models/',Y,'.model')
   bst <- xgb.load(model_name)
+  print(head(mPredict_data))
   forecast <- voorspelling_2_numeric(predict(bst,mPredict_data), Y = Y)
   return(list(Model = bst, voorspelling = forecast))
 }

@@ -7,8 +7,8 @@ RUN R -e "install.packages('xgboost')"
 RUN R -e "install.packages('plyr')"
 RUN R -e "install.packages('jsonlite')"
 RUN R -e "install.packages('data.table')"
-ADD dga /dga
+ADD src /src
 ADD config /config
 ADD models /models
 ADD tests /tests
-CMD ["/dga/main.R"]
+CMD ["/src/main.R"]

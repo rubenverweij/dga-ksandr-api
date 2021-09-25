@@ -1,14 +1,15 @@
 # DGA-KSANDR-API
 
+Inhoudsopgave:
 1. [Gebruik](#use)
 2. [Installatie](#install)
 3. [Data transformaties](#data)
 4. [Data format](#format)
 
-Deze api is ontwikkeld in opdracht van KSANDR. Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan van de verwachte parts per million (ppm) waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2) en het risicoprofiel. De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR.
+Deze api is ontwikkeld in opdracht van KSANDR. Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan van de verwachte parts per million (ppm) waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2) en het risicoprofiel. De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR (voor meer achtergrond zie de documentatie van de DGA tool).
 
 1.  `config`: configuratiebestanden en globale variabelen
-2.  `dga`: source code DGA tool en api
+2.  `src`: source code DGA tool en api
 3.  `models`: DGA xgboost modellen
 4.  `tests`: test data
 
@@ -25,13 +26,32 @@ curl -X POST "http://127.0.0.1:8000/voorspelling" -H "accept: application/json" 
 #### test de api (json)
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/voorspelling" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@single_trafo.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+curl -X POST "http://127.0.0.1:8000/voorspelling" <json> -H "accept: application/json"
 ```
 
-De verwachte response zijn de waarden van de sleutelgassen per uniek serienummer:
+De verwachte response bevat de verwachte ppm waarden van de sleutelgassen en het risico per uniek serienummer:
 
 ```json
-[{"UN":"102630","H2":"2.0808","CH4":"1.7275","C2H6":"0.346","C2H4":"0.346","C2H2":"0.3135"},{"UN":"102631","H2":"2.1187","CH4":"1.7691","C2H6":"0.349","C2H4":"0.4405","C2H2":"0.4782"}]
+[
+  {
+    "UN": "102630",
+    "H2": 29.2555,
+    "CH4": 139.6803,
+    "C2H6": 41.0745,
+    "C2H4": 67.0762,
+    "C2H2": 4.196,
+    "Risico": 99.95
+  },
+  {
+    "UN": "102631",
+    "H2": 29.7297,
+    "CH4": 171.5395,
+    "C2H6": 48.3307,
+    "C2H4": 70.0638,
+    "C2H2": 4.2453,
+    "Risico": 99.85
+  }
+]
 ```
 
 
@@ -306,3 +326,338 @@ labels = c("green" = 1,"orange"= 2,"red" = 3,"purple" = 4))
 ```
 
 ## Data Format <a name="format"></a>
+
+Het json format die de api verwacht ziet er als volgt uit:
+
+```json
+[{
+        "H2": "14.5",
+        "CH4": "1",
+        "C2H6": "1",
+        "C2H4": "1",
+        "C2H2": "0.2",
+        "CO": "57",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20090616",
+        "C3H8_propaan_ul_p_l": "10",
+        "C3H6_propeen_ul_p_l": "10",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "270",
+        "O2_zuurstof_ul_p_l": "16000",
+        "N2_stikstof_ul_p_l": "49900",
+        "zuurgetal_g_KOH_p_kg": "0.01"
+    }, {
+        "H2": "15.8",
+        "CH4": "1.35",
+        "C2H6": "0.19",
+        "C2H4": "0.15",
+        "C2H2": "0.2",
+        "CO": "120",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20100825",
+        "C3H8_propaan_ul_p_l": "16",
+        "C3H6_propeen_ul_p_l": "10",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "100",
+        "O2_zuurstof_ul_p_l": "16600",
+        "N2_stikstof_ul_p_l": "91100"
+    }, {
+        "H2": "12.4",
+        "CH4": "4.8",
+        "C2H6": "0.14",
+        "C2H4": "0.15",
+        "C2H2": "0.2",
+        "CO": "145",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20110919",
+        "C3H8_propaan_ul_p_l": "23",
+        "C3H6_propeen_ul_p_l": "2",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "490",
+        "O2_zuurstof_ul_p_l": "2400",
+        "N2_stikstof_ul_p_l": "81100"
+    }, {
+        "H2": "10.8",
+        "CH4": "1.59",
+        "C2H6": "0.18",
+        "C2H4": "0.15",
+        "C2H2": "0.2",
+        "CO": "138",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20120504",
+        "C3H8_propaan_ul_p_l": "10",
+        "C3H6_propeen_ul_p_l": "10",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "100",
+        "O2_zuurstof_ul_p_l": "18700",
+        "N2_stikstof_ul_p_l": "57300"
+    }, {
+        "H2": "11.7",
+        "CH4": "0.79",
+        "C2H6": "0.33",
+        "C2H4": "0.17",
+        "C2H2": "0.2",
+        "CO": "215",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20130515",
+        "C3H8_propaan_ul_p_l": "10",
+        "C3H6_propeen_ul_p_l": "10",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "100",
+        "O2_zuurstof_ul_p_l": "9600",
+        "N2_stikstof_ul_p_l": "67300"
+    }, {
+        "H2": "8.8",
+        "CH4": "1.42",
+        "C2H6": "0.49",
+        "C2H4": "0.60",
+        "C2H2": "0.2",
+        "CO": "47",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20150213",
+        "C3H8_propaan_ul_p_l": "10",
+        "C3H6_propeen_ul_p_l": "10",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "100",
+        "O2_zuurstof_ul_p_l": "13200",
+        "N2_stikstof_ul_p_l": "57600"
+    }, {
+        "H2": "15.2",
+        "CH4": "1.35",
+        "C2H6": "0.55",
+        "C2H4": "1.03",
+        "C2H2": "0.2",
+        "CO": "269",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20170227",
+        "C3H8_propaan_ul_p_l": "1",
+        "C3H6_propeen_ul_p_l": "1",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "430",
+        "O2_zuurstof_ul_p_l": "8200",
+        "N2_stikstof_ul_p_l": "38800"
+    }, {
+        "H2": "16.4",
+        "CH4": "2.0",
+        "C2H6": "0.74",
+        "C2H4": "1.08",
+        "C2H2": "0.2",
+        "CO": "243",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20180305",
+        "C3H8_propaan_ul_p_l": "2",
+        "C3H6_propeen_ul_p_l": "1",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "900",
+        "O2_zuurstof_ul_p_l": "7400",
+        "N2_stikstof_ul_p_l": "82600"
+    }, {
+        "H2": "11.3",
+        "CH4": "2.0",
+        "C2H6": "1.71",
+        "C2H4": "1.36",
+        "C2H2": "0.2",
+        "CO": "346",
+        "SerieNr.": "102630",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20190319",
+        "C3H8_propaan_ul_p_l": "2",
+        "C3H6_propeen_ul_p_l": "1",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "850",
+        "O2_zuurstof_ul_p_l": "5900",
+        "N2_stikstof_ul_p_l": "72100"
+    }, {
+        "H2": "27.4",
+        "CH4": "1",
+        "C2H6": "1",
+        "C2H4": "1",
+        "C2H2": "1",
+        "CO": "42",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20090616",
+        "C3H8_propaan_ul_p_l": "33",
+        "C3H6_propeen_ul_p_l": "120",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "12100",
+        "O2_zuurstof_ul_p_l": "12200",
+        "N2_stikstof_ul_p_l": "50900",
+        "zuurgetal_g_KOH_p_kg": "0.04"
+    }, {
+        "H2": "28",
+        "CH4": "1.38",
+        "C2H6": "0.12",
+        "C2H4": "0.15",
+        "C2H2": "0.2",
+        "CO": "107",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20100825",
+        "C3H8_propaan_ul_p_l": "10",
+        "C3H6_propeen_ul_p_l": "10",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "1200",
+        "O2_zuurstof_ul_p_l": "24600",
+        "N2_stikstof_ul_p_l": "46000",
+        "zuurgetal_g_KOH_p_kg": "0.01"
+    }, {
+        "H2": "18.9",
+        "CH4": "4.3",
+        "C2H6": "0.17",
+        "C2H4": "0.15",
+        "C2H2": "0.2",
+        "CO": "127",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20110919",
+        "C3H8_propaan_ul_p_l": "4",
+        "C3H6_propeen_ul_p_l": "2",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "3600",
+        "O2_zuurstof_ul_p_l": "7600",
+        "N2_stikstof_ul_p_l": "11700"
+    }, {
+        "H2": "15.9",
+        "CH4": "1.82",
+        "C2H6": "0.24",
+        "C2H4": "0.15",
+        "C2H2": "0.2",
+        "CO": "147",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20120504",
+        "C3H8_propaan_ul_p_l": "54",
+        "C3H6_propeen_ul_p_l": "110",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "24000",
+        "O2_zuurstof_ul_p_l": "11800",
+        "N2_stikstof_ul_p_l": "49000",
+        "zuurgetal_g_KOH_p_kg": "0.05"
+    }, {
+        "H2": "12.0",
+        "CH4": "0.91",
+        "C2H6": "0.34",
+        "C2H4": "0.21",
+        "C2H2": "0.2",
+        "CO": "158",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20130515",
+        "C3H8_propaan_ul_p_l": "55",
+        "C3H6_propeen_ul_p_l": "120",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "12200",
+        "O2_zuurstof_ul_p_l": "21200",
+        "N2_stikstof_ul_p_l": "38300",
+        "zuurgetal_g_KOH_p_kg": "0.04"
+    }, {
+        "H2": "12.8",
+        "CH4": "1.59",
+        "C2H6": "0.40",
+        "C2H4": "0.42",
+        "C2H2": "0.2",
+        "CO": "242",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20150213",
+        "C3H8_propaan_ul_p_l": "2",
+        "C3H6_propeen_ul_p_l": "1",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "1100",
+        "O2_zuurstof_ul_p_l": "1600",
+        "N2_stikstof_ul_p_l": "24900"
+    }, {
+        "H2": "8.9",
+        "CH4": "1.77",
+        "C2H6": "0.50",
+        "C2H4": "1.03",
+        "C2H2": "0.2",
+        "CO": "230",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20170227",
+        "C3H8_propaan_ul_p_l": "1",
+        "C3H6_propeen_ul_p_l": "1",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "1200",
+        "O2_zuurstof_ul_p_l": "12400",
+        "N2_stikstof_ul_p_l": "62100"
+    }, {
+        "H2": "8.2",
+        "CH4": "2.0",
+        "C2H6": "0.55",
+        "C2H4": "1.25",
+        "C2H2": "0.2",
+        "CO": "239",
+        "SerieNr.": "102631",
+        "Merk": "SGB",
+        "Bouwjaar": "0905",
+        "OlieSoort": "Nytro Taurus",
+        "Datum": "20180305",
+        "C3H8_propaan_ul_p_l": "1",
+        "C3H6_propeen_ul_p_l": "1",
+        "C4H10n_norm_butaan_ul_p_l": 0,
+        "C4H10i_iso_butaan_ul_p_l": 0,
+        "CO2_kooldioxide_ul_p_l": "210",
+        "O2_zuurstof_ul_p_l": "11200",
+        "N2_stikstof_ul_p_l": "26700"
+    }
+]
+```

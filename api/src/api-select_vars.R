@@ -42,9 +42,9 @@ select_vars <- function(data) {
   # 1. We want to express the age, and 2. we want to include the time since last check
   data$age_days <-
     as.numeric(
-      as.Date.character(data$Datum, format = '%d-%m-%Y') - as.Date.character(data$Bouwjaar, format = '%Y')
+      as.Date.character(data$Datum, format = '%Y-%m-%d') - as.Date.character(data$Bouwjaar, format = '%Y')
     )
-  data <- data[which(data$apparaat_soort != 'sl'), ]
+  # data <- data[which(data$apparaat_soort != 'sl'), ]
   
   ## Two columns to drop
   MarkerKleur <- data$Markerkleur

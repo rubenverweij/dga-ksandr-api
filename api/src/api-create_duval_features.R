@@ -39,65 +39,18 @@ create_duval_features <- function(data) {
   P95C2H6 <- 123
   P99C2H6 <- 659
   
-  vDim_string_numeric <-
-    dim(df[c('H2',
-             'CH4',
-             'C2H6',
-             'C2H4',
-             'C2H2',
-             'CO')])
-  df[c('H2',
-       'CH4',
-       'C2H6',
-       'C2H4',
-       'C2H2',
-       'CO')] <-
-    matrix(as.numeric(gsub("<", "", as.matrix(df[c('H2',
-                                                   'CH4',
-                                                   'C2H6',
-                                                   'C2H4',
-                                                   'C2H2',
-                                                   'CO')]))), nrow = vDim_string_numeric[1], ncol = vDim_string_numeric[2])
+  cols.num <- c("H2","CH4", "C2H6", "C2H4", "C2H2", "CO")
+  df[cols.num] <- sapply(df[cols.num], as.numeric)
   
-  # colnames(df)[KolomnummerH2] <- "H2"
-  # colnames(df)[KolomnummerCH4] <- "CH4"
-  # colnames(df)[KolomnummerC2H6] <- "C2H6"
-  # colnames(df)[KolomnummerC2H4] <- "C2H4"
-  # colnames(df)[KolomnummerC2H2] <- "C2H2"
-  # colnames(df)[KolomnummerCO] <- "CO"
-  # colnames(df)[KolomnummerAftappunt] <- "Aftappunt"
-  # colnames(df)[KolomnummerMerk] <- "Merk"
-  
-  # Remove ± 2000 rows
-  df <-
-    subset(df,!(H2 == "NA" |
-                  CH4 == "NA" |
-                  C2H6 == "NA" | C2H4 == "NA" | C2H2 == "NA"))
-  # Removes ±1000 rows
-  df <- subset(df, Aftappunt == "o")
-  
+
   df[, 'Datum'] <-
     as.Date(df[, 'Datum', drop = TRUE], format = "%Y%m%d")
   df[, 'Datum'] <-
     strftime(df[, 'Datum', drop = TRUE], "%d-%m-%Y")
   df[, 'Datum'] <-
     as.Date(as.character(df[, 'Datum', drop = TRUE]), "%d-%m-%Y")
-  
-  # colnames(df)[KolomnummerDatum] <- "Datum"
-  # colnames(df)[KolomnummerSerieNummer] <- "SerieNr."
-  # colnames(df)[KolomnummerEigenNummer] <- "EigenNr."
-  # colnames(df)[KolomnummerPlaats] <- "Plaats"
-  # colnames(df)[KolomnummerBouwjaar] <- "Bouwjaar"
-  # colnames(df)[1] <- "UN"
-  # colnames(df)[KolomnummerOlieCode] <- "OlieCode"
-  # colnames(df)[KolomnummerOlieNaam] <- "olieNaam"
-  # colnames(df)[KolomnummerOlieSoort] <- "OlieSoort"
-  # colnames(df)[KolomnummerCategorie] <- "Categorie"
-  
   df <- subset(df, Datum >= as.Date("2000-01-01"))
-  df[, 'Datum'] <-
-    strftime(df[, 'Datum', drop = TRUE], "%d-%m-%Y")
-  
+
   df <-
     within(df, Bouwjaar[!is.na(Bouwjaar) &
                           substr(Bouwjaar, 1, 2) < 30] <-
@@ -108,26 +61,9 @@ create_duval_features <- function(data) {
                           substr(Bouwjaar, 1, 2) >= 30] <-
              paste("19", substr(Bouwjaar[!is.na(Bouwjaar) &
                                            substr(Bouwjaar, 1, 2) >= 30] , 1, 2), sep = ""))
-  
-  Transformatoren <- unique(df[1:14])
-  Transformatoren <-
-    Transformatoren[order(Transformatoren[, 'Plaats', drop = TRUE],
-                          Transformatoren[, 'SerieNr.', drop = TRUE],
-                          Transformatoren[, 'EigenNr.', drop = TRUE]),]
-  Transformatoren[1] <- rownames(Transformatoren)
-  
-  df <-
-    df[order(df[, 'Plaats', drop = TRUE], df[, 'SerieNr.', drop = TRUE],
-             df[, 'EigenNr.', drop = TRUE], as.Date(df[, 'Datum', drop = TRUE], format =
-                                                      "%d-%m-%Y")),]
-  
-  # df['UN'] <-
-  #   left_join(df, Transformatoren, by = c("SerieNr.", "EigenNr.", "Plaats"))["UN.y"]
-  Transformatoren[, 'EigenNr.'] <-
-    replace_na(Transformatoren[, 'EigenNr.', drop = TRUE], "Onbekend")
-  Transformatoren[, 'Plaats'] <-
-    replace_na(Transformatoren[, 'Plaats', drop = TRUE], "Onbekend")
-  
+  df <- df %>% arrange(SerieNr., Datum)
+  df['UN'] <- df$SerieNr.
+
   #Uitvoeren Duval Triangle --------------------------------------------------------------------
   df$H2T4 = df$H2 / (df$H2 + df$CH4 + df$C2H6) * 100
   df$C2H6T4 = df$C2H6 / (df$H2 + df$CH4 + df$C2H6) * 100
@@ -620,6 +556,6 @@ create_duval_features <- function(data) {
   df <- within(df, TDCGkleur[TDCG >= GrensTDCGNormaal] <- "1")
   df <- within(df, TDCGkleur[TDCG >= GrensTDCGRiskant] <- "2")
   df <- within(df, TDCGkleur[TDCG >= GrensTDCGKritiek] <- "3")
-  Transformatoren <<- Transformatoren
+  # Transformatoren <<- Transformatoren
   return(df)
 }

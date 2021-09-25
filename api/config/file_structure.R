@@ -5,19 +5,11 @@ required_columns <- c(
   "C2H4",
   "C2H2",
   "CO",
-  "UN",
-  "apparaatsoort",
   "SerieNr.",
   "Merk",
-  "Plaats",
-  "EigenNr.",
   "Bouwjaar",
-  "OlieCode",
-  "olieNaam",
   "OlieSoort",
-  "Categorie",
   "Datum",
-  "Aftappunt",
   "C3H8_propaan_ul_p_l",
   "C3H6_propeen_ul_p_l",
   "C4H10n_norm_butaan_ul_p_l",
@@ -25,8 +17,7 @@ required_columns <- c(
   "CO2_kooldioxide_ul_p_l",
   "O2_zuurstof_ul_p_l",
   "N2_stikstof_ul_p_l",
-  "zuurgetal_g_KOH_p_kg",
-  "apparaat_soort"
+  "zuurgetal_g_KOH_p_kg"
 )
 
 kwantiel_h2 <- c(-Inf,3.5,5,7.5,10, 30, 88,210,1070,Inf)

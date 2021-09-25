@@ -33,7 +33,12 @@ function(f) {
   writeBin(f[[1]], tmp)
   
   # Read, transform and predict
-  excel_data <- readxl::read_excel(tmp, trim_ws = TRUE, na = c("", "NA"))
+  excel_data <-
+    readxl::read_excel(
+      tmp,
+      trim_ws = TRUE,
+      na = c("", "NA")
+    )
   data_transformed <- transform_data(excel_data)
   prediction <- voorspel_dga(data_transformed)
   prediction$mForecast %>%
@@ -44,7 +49,6 @@ function(f) {
 
 #* DGA  sleutelgas voorspelling voor transformatoren
 #* @post /voorspelling_json
-#* @serializer json
 function(f) {
   
   # Read, transform and predict
