@@ -2,11 +2,10 @@
 #* @apiDescription Deze api is ontwikkeld in opdracht van KSANDR. 
 #* Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan 
 #* van de verwachte ppm waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2)
-#* 
-#* De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR.
+#* en een risico score. De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR.
 #* 
 #* @apiVersion 1.0
-#* @apiContact ruben.verweij@datapreds.com
+#* @apiContact 
 #* @apiTag DGA
 
 library(Rcpp)
