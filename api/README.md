@@ -2,6 +2,8 @@
 
 Deze api is ontwikkeld in opdracht van KSANDR. Op basis van beschikbare DGA meetwaarden wordt een voorspelling gedaan van de verwachte parts per million (ppm) waarden van vijf sleutelgassen (C2H2, C2H4, C2H6, CH4, H2) en het risicoprofiel. De achterliggende modellen zijn ontwikkeld door studenten in opdracht van KSANDR (voor meer achtergrond zie de documentatie van de DGA tool).
 
+Er is geen aanpassing gedaan aan de werking van de modellen.
+
 # Inhoudsopgave
 1. [Gebruik api](#use)
 2. [Installatie R en Docker](#install)
@@ -16,59 +18,105 @@ Wanneer de api container applicatie draait kan een request worden gedaan op het 
 #### POST excel format
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/voorspelling" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@single_trafo.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+curl -X POST "http://127.0.0.1:5379/voorspelling_excel" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@test_dnwg_klein.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 ```
 
 #### POST json format
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/voorspelling" <json> -H "accept: application/json"
+curl --data @test_metingen.json  http://127.0.0.1:8000/voorspelling_json_file
+# curl --data "f=@test_metingen.json" "http://127.0.0.1:8000/voorspelling_json" -H "content-type: application/json"
+# curl --data "f=@test_metingen.json" "http://127.0.0.1:8000/voorspelling_json" -H "accept: application/json"
+# curl -X POST -H "Content-Type: application/json" -d @test_metingen.json http://127.0.0.1:8000/voorspelling_json
+# curl -X POST "http://127.0.0.1:8000/voorspelling_json" "f=test_metingen.json" -H  "accept: */*" -d ""
+
 ```
 
 Het format van de json in de POST request:
 
 ```json
 [{
-        "H2": 14.5,
-        "CH4": 1,
-        "C2H6": 1,
+        "H2": 5.4,
+        "CH4": 2.9,
+        "C2H6": 1.3,
         "C2H4": 1,
-        "C2H2": 0.2,
-        "CO": 57,
-        "SerieNr.": "102630",
-        "Merk": "SGB",
-        "Bouwjaar": "0905",
-        "OlieSoort": "Nytro Taurus",
-        "Datum": "20090616",
-        "C3H8_propaan_ul_p_l": 10,
-        "C3H6_propeen_ul_p_l": 10,
-        "C4H10n_norm_butaan_ul_p_l": 0,
-        "C4H10i_iso_butaan_ul_p_l": 0,
-        "CO2_kooldioxide_ul_p_l": 270,
-        "O2_zuurstof_ul_p_l": 16000,
-        "N2_stikstof_ul_p_l": 49900,
-        "zuurgetal_g_KOH_p_kg": 0.01
+        "C2H2": 1,
+        "CO": 75,
+        "SerieNr.": "219199",
+        "Merk": "Smit",
+        "Bouwjaar": "7806",
+        "OlieSoort": "Diala B",
+        "Datum": "20040527",
+        "C3H8_propaan_ul_p_l": 4.3,
+        "C3H6_propeen_ul_p_l": 3.1,
+        "C4H10n_norm_butaan_ul_p_l": 1.7,
+        "C4H10i_iso_butaan_ul_p_l": 1,
+        "CO2_kooldioxide_ul_p_l": 1280,
+        "O2_zuurstof_ul_p_l": "NA",
+        "N2_stikstof_ul_p_l": "NA",
+        "zuurgetal_g_KOH_p_kg": 0.02
     }, {
-        "H2": 15.8,
-        "CH4": 1.35,
-        "C2H6": 0.19,
-        "C2H4": 0.15,
-        "C2H2": 0.2,
-        "CO": 120,
-        "SerieNr.": "102630",
-        "Merk": "SGB",
-        "Bouwjaar": "0905",
-        "OlieSoort": "Nytro Taurus",
-        "Datum": "20100825",
-        "C3H8_propaan_ul_p_l": 16,
-        "C3H6_propeen_ul_p_l": 10,
-        "C4H10n_norm_butaan_ul_p_l": 0,
-        "C4H10i_iso_butaan_ul_p_l": 0,
-        "CO2_kooldioxide_ul_p_l": 100,
-        "O2_zuurstof_ul_p_l": 16600,
-        "N2_stikstof_ul_p_l": 91100,
-        "zuurgetal_g_KOH_p_kg": 0.01
-    }]
+        "H2": 10.7,
+        "CH4": 4.1,
+        "C2H6": 2.2,
+        "C2H4": 1,
+        "C2H2": 1,
+        "CO": 199,
+        "SerieNr.": "219199",
+        "Merk": "Smit",
+        "Bouwjaar": "7806",
+        "OlieSoort": "Diala B",
+        "Datum": "20010712",
+        "C3H8_propaan_ul_p_l": 4.8,
+        "C3H6_propeen_ul_p_l": 3.7,
+        "C4H10n_norm_butaan_ul_p_l": 1.5,
+        "C4H10i_iso_butaan_ul_p_l": 1,
+        "CO2_kooldioxide_ul_p_l": 2070,
+        "O2_zuurstof_ul_p_l": "NA",
+        "N2_stikstof_ul_p_l": "NA",
+        "zuurgetal_g_KOH_p_kg": "NA"
+    }, {
+        "H2": 5.6,
+        "CH4": 3,
+        "C2H6": 1.7,
+        "C2H4": 1.1,
+        "C2H2": 1,
+        "CO": 80,
+        "SerieNr.": "219199",
+        "Merk": "Smit",
+        "Bouwjaar": "7806",
+        "OlieSoort": "Diala B",
+        "Datum": "20030321",
+        "C3H8_propaan_ul_p_l": 4.7,
+        "C3H6_propeen_ul_p_l": 3.4,
+        "C4H10n_norm_butaan_ul_p_l": 1.4,
+        "C4H10i_iso_butaan_ul_p_l": 1,
+        "CO2_kooldioxide_ul_p_l": 1710,
+        "O2_zuurstof_ul_p_l": "NA",
+        "N2_stikstof_ul_p_l": "NA",
+        "zuurgetal_g_KOH_p_kg": "NA"
+    }, {
+        "H2": 7.5,
+        "CH4": 3.7,
+        "C2H6": 2.1,
+        "C2H4": 1.1,
+        "C2H2": 1,
+        "CO": 126,
+        "SerieNr.": "219199",
+        "Merk": "Smit",
+        "Bouwjaar": "7806",
+        "OlieSoort": "Diala B",
+        "Datum": "20020626",
+        "C3H8_propaan_ul_p_l": 4.5,
+        "C3H6_propeen_ul_p_l": 3.6,
+        "C4H10n_norm_butaan_ul_p_l": 1.8,
+        "C4H10i_iso_butaan_ul_p_l": 1,
+        "CO2_kooldioxide_ul_p_l": 2150,
+        "O2_zuurstof_ul_p_l": "NA",
+        "N2_stikstof_ul_p_l": "NA",
+        "zuurgetal_g_KOH_p_kg": "NA"
+    }
+]
 ```
 
 De response (ppm waarden voor de sleutelgassen en een risicoscore per serienummer):
@@ -76,22 +124,13 @@ De response (ppm waarden voor de sleutelgassen en een risicoscore per serienumme
 ```json
 [
   {
-    "UN": "102630",
-    "H2": 29.2555,
-    "CH4": 139.6803,
-    "C2H6": 41.0745,
-    "C2H4": 67.0762,
-    "C2H2": 4.196,
-    "Risico": 99.95
-  },
-  {
-    "UN": "102631",
-    "H2": 29.7297,
-    "CH4": 171.5395,
-    "C2H6": 48.3307,
-    "C2H4": 70.0638,
-    "C2H2": 4.2453,
-    "Risico": 99.85
+    "UN": "219199",
+    "H2": 9.9805,
+    "CH4": 4.414,
+    "C2H6": 2.7289,
+    "C2H4": 2.4367,
+    "C2H2": 2.0071,
+    "Risico": 0
   }
 ]
 ```
@@ -342,6 +381,47 @@ labels = c("green" = 1,"orange"= 2,"red" = 3,"purple" = 4))
 
 ```
 
+De features die het model verwacht:
+
+```r
+ c("Bouwjaar", "C4H10n_norm_butaan_ul_p_l", "C4H10i_iso_butaan_ul_p_l", 
+              "age_days", "H2_lag", "CH4_lag", "C2H6_lag", "C2H4_lag", "C2H2_lag", 
+              "CO_lag", "H2T4_lag", "C2H6T4_lag", "CH4T4_lag", "CH4T5_lag", 
+              "C2H6T5_lag", "C2H4T5_lag", "CH4T1_lag", "C2H4T1_lag", "C2H2T1_lag", 
+              "H2P1_lag", "CH4P1_lag", "C2H2P1_lag", "C2H4P1_lag", "C2H6P1_lag", 
+              "T1_lag", "T4_lag", "T5_lag", "P1_lag", "P2_lag", "Cx_lag", "Cy_lag", 
+              "Markerkleur_lag", "TDCG_lag", "TDCGkleur_lag", "H2_lag2", "CH4_lag2", 
+              "C2H6_lag2", "C2H4_lag2", "C2H2_lag2", "CO_lag2", "H2T4_lag2", 
+              "C2H6T4_lag2", "CH4T4_lag2", "CH4T5_lag2", "C2H6T5_lag2", "C2H4T5_lag2", 
+              "CH4T1_lag2", "C2H4T1_lag2", "C2H2T1_lag2", "H2P1_lag2", "CH4P1_lag2", 
+              "C2H2P1_lag2", "C2H4P1_lag2", "C2H6P1_lag2", "T1_lag2", "T4_lag2", 
+              "T5_lag2", "P1_lag2", "P2_lag2", "Cx_lag2", "Cy_lag2", "Markerkleur_lag2", 
+              "TDCG_lag2", "TDCGkleur_lag2", "H2_lag3", "CH4_lag3", "C2H6_lag3", 
+              "C2H4_lag3", "C2H2_lag3", "CO_lag3", "H2T4_lag3", "C2H6T4_lag3", 
+              "CH4T4_lag3", "CH4T5_lag3", "C2H6T5_lag3", "C2H4T5_lag3", "CH4T1_lag3", 
+              "C2H4T1_lag3", "C2H2T1_lag3", "H2P1_lag3", "CH4P1_lag3", "C2H2P1_lag3", 
+              "C2H4P1_lag3", "C2H6P1_lag3", "T1_lag3", "T4_lag3", "T5_lag3", 
+              "P1_lag3", "P2_lag3", "Cx_lag3", "Cy_lag3", "Markerkleur_lag3", 
+              "TDCG_lag3", "TDCGkleur_lag3", "V1_ABB", "V1_ACEC", "V1_AEG", 
+              "V1_Alstom", "V1_Ansaldo", "V1_AREVA", "V1_Arteche", "V1_ASEA", 
+              "V1_Babcock", "V1_Balteau", "V1_BBC", "V1_BEZ", "V1_C.G.E.", 
+              "V1_CEM", "V1_CGS", "V1_COQ", "V1_Crompton Greaves", "V1_Dominit", 
+              "V1_EBG", "V1_Elin", "V1_English Electric", "V1_ETRA", "V1_Fr. Transfo", 
+              "V1_Ganz", "V1_Garbe-Lahmeyer", "V1_Haefely", "V1_Helmke", "V1_HOLEC", 
+              "V1_HTT", "V1_I.E.O.", "V1_Junker", "V1_Lepper", "V1_M.W.B.", 
+              "V1_Merk onbekend", "V1_Merlin-Gerin", "V1_MTC", "V1_Oerlikon", 
+              "V1_Pauwels", "V1_Ritz", "V1_Savoisienne", "V1_Schorch", "V1_SEA", 
+              "V1_SGB", "V1_Siemens", "V1_Smit", "V1_SWT", "V1_Tamini", "V1_Tironi", 
+              "V1_Toshiba", "V1_Trafo-Union", "V1_Trench", "V1_Volta-Werke", 
+              "V1_2000", "V1_7131", "V1_Diala B", "V1_Diala C", "V1_Diala D", 
+              "V1_Diala G", "V1_Diala GX", "V1_Diala M", "V1_Diala S2 ZU-I", 
+              "V1_Diala S3 ZX-I", "V1_Diala S4 ZX-I", "V1_Diekan 1500 N", "V1_Mobilect 35 / Castrol B", 
+              "V1_Nytro 10 GBN", "V1_Nytro 10 XN", "V1_Nytro 3000", "V1_Nytro Libra", 
+              "V1_Nytro Taurus", "V1_Transformer Oil TR 26", "V1_Univolt 62", 
+              "V1_US 3000 P")
+
+```
+
 ## Uitleg Repository <a name="repo"></a>
 
 1.  `config`: configuratiebestanden en globale variabelen
@@ -353,6 +433,7 @@ labels = c("green" = 1,"orange"= 2,"red" = 3,"purple" = 4))
 
 ## Beheer api <a name="beheer"></a>
 
+Het beheer van de api is eenvoudig
 
 ### Bouwen image en draaien api-server
 
