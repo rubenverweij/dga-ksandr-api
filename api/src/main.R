@@ -20,6 +20,16 @@ source("api-transform_data.R")
 source("api-voorspel_dga.R")
 
 
+# * @filter logger
+function(req, res){
+  cat(as.character(Sys.time()), "-",
+      req$REQUEST_METHOD, req$PATH_INFO, "-",
+      req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR, "\n", append=TRUE,
+      file="/log/api_logs.txt")
+  plumber::forward()
+}
+
+
 #* DGA  sleutelgas voorspelling voor transformatoren
 #* @param f:file
 #* @post /voorspelling_excel

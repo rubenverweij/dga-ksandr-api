@@ -10,15 +10,6 @@ library(dplyr)
 library(xgboost)
 library(ggplot2)
 
-
-# * @filter logger
-# function(req, res){
-#   cat(as.character(Sys.time()), "-",
-#       req$REQUEST_METHOD, req$PATH_INFO, "-",
-#       req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR, "\n", append=TRUE,
-#       file="/log/api_logs.txt")
-#   plumber::forward()
-# }
 ```
 
 ## Vragen

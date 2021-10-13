@@ -6,10 +6,11 @@ Er is geen aanpassing gedaan aan de werking van de modellen.
 
 # Inhoudsopgave
 1. [Gebruik api](#use)
-2. [Installatie R en Docker](#install)
-3. [Data transformaties](#data)
-4. [Uitleg repository](#repo)
-5. [Beheer api](#beheer)
+2. [Beheer api](#beheer)
+3. [Installatie R en Docker](#install)
+4. [Data transformaties](#data)
+5. [Uitleg repository](#repo)
+
 
 ## Gebruik <a name="use"></a>
 
@@ -18,18 +19,13 @@ Wanneer de api container applicatie draait kan een request worden gedaan op het 
 #### POST excel format
 
 ```bash
-curl -X POST "http://127.0.0.1:5379/voorspelling_excel" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@test_dnwg_klein.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+curl -X POST "http://127.0.0.1:8000/voorspelling_excel" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "f=@test_dnwg_klein.xlsx;type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 ```
 
 #### POST json format
 
 ```bash
 curl --data @test_metingen.json  http://127.0.0.1:8000/voorspelling_json_file
-# curl --data "f=@test_metingen.json" "http://127.0.0.1:8000/voorspelling_json" -H "content-type: application/json"
-# curl --data "f=@test_metingen.json" "http://127.0.0.1:8000/voorspelling_json" -H "accept: application/json"
-# curl -X POST -H "Content-Type: application/json" -d @test_metingen.json http://127.0.0.1:8000/voorspelling_json
-# curl -X POST "http://127.0.0.1:8000/voorspelling_json" "f=test_metingen.json" -H  "accept: */*" -d ""
-
 ```
 
 Het format van de json in de POST request:
@@ -44,7 +40,7 @@ Het format van de json in de POST request:
         "CO": 75,
         "SerieNr.": "219199",
         "Merk": "Smit",
-        "Bouwjaar": "7806",
+        "Bouwjaar": "1978",
         "OlieSoort": "Diala B",
         "Datum": "20040527",
         "C3H8_propaan_ul_p_l": 4.3,
@@ -64,7 +60,7 @@ Het format van de json in de POST request:
         "CO": 199,
         "SerieNr.": "219199",
         "Merk": "Smit",
-        "Bouwjaar": "7806",
+        "Bouwjaar": "1978",
         "OlieSoort": "Diala B",
         "Datum": "20010712",
         "C3H8_propaan_ul_p_l": 4.8,
@@ -135,6 +131,48 @@ De response (ppm waarden voor de sleutelgassen en een risicoscore per serienumme
 ]
 ```
 
+## Beheer api <a name="beheer"></a>
+
+Het beheer van de api is eenvoudig. In principe is er geen onderhoud aan de container. Met `docker` kunnen verschillende 
+standaard operaties worden gedaan zoals `start` en `stop`. Default starten we de container met een restart policy `--restart unless-stopped`. Dit betekent dat de container altijd weer opstart tenzij hij manueel wordt gestopt. 
+
+De repo bestaat uit de volgende mappen:
+1.  `config`: configuratiebestanden en globale variabelen
+2.  `src`: source code DGA tool en api
+3.  `models`: DGA xgboost modellen
+4.  `tests`: test data
+5.  `log`: api logging
+
+### Bouwen image en draaien api-server
+
+Doorloop de volgende stappen:
+
+1.  Clone de repository.
+2.  Zorg ervoor dat R en Docker zijn geinstalleerd (zie hoofdstuk installatie).
+3.  Doorloop de onderstaande stappen:
+
+```bash
+# Bouw vervolgens eerst de image:
+docker build api/ -t dga/1.0
+
+# Controleer het `<image_id>`:
+docker images
+
+# Start de container
+docker run -d --restart unless-stopped --net=host -p 8000:8000 <image_id>
+
+# Controleer of de container applicatie draait
+docker ps
+
+# Verwijder een image
+docker rmi <image_id>
+
+# Breng de container down (vind het ID door "docker ps" te gebruiken)
+docker stop <container_id>
+
+# Het updaten van een restart policy voor een draaiende container
+docker update --restart unless-stopped redis
+```
 
 ## Installatie <a name="install"></a>
 
@@ -420,42 +458,4 @@ De features die het model verwacht:
               "V1_Nytro Taurus", "V1_Transformer Oil TR 26", "V1_Univolt 62", 
               "V1_US 3000 P")
 
-```
-
-## Uitleg Repository <a name="repo"></a>
-
-1.  `config`: configuratiebestanden en globale variabelen
-2.  `src`: source code DGA tool en api
-3.  `models`: DGA xgboost modellen
-4.  `tests`: test data
-
-
-
-## Beheer api <a name="beheer"></a>
-
-Het beheer van de api is eenvoudig
-
-### Bouwen image en draaien api-server
-
-Doorloop de volgende stappen:
-
-1.  Clone de repository.
-2.  Zorg ervoor dat R en Docker zijn geinstalleerd (zie hoofdstuk installatie).
-3.  Doorloop de onderstaande stappen:
-
-```bash
-# Bouw vervolgens eerst de image:
-docker build api/ -t dga/1.0
-
-# Controleer het `IMAGE_ID`:
-docker images
-
-# Start de container
-docker run --rm -p 8000:8000 IMAGE_ID
-
-# Controleer of de container applicatie draait
-docker ps
-
-# Breng de container down (vind het ID door "docker ps" te gebruiken)
-docker stop CONTAINER_IDs
 ```
