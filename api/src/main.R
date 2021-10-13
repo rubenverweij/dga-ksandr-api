@@ -20,7 +20,6 @@ source("api-transform_data.R")
 source("api-voorspel_dga.R")
 
 
-
 #* DGA  sleutelgas voorspelling voor transformatoren
 #* @param f:file
 #* @post /voorspelling_excel
@@ -45,7 +44,6 @@ function(f) {
 
 }
 
-
 #* DGA  sleutelgas voorspelling voor transformatoren
 #* @post /voorspelling_json
 function(f) {
@@ -53,6 +51,18 @@ function(f) {
   # Read, transform and predict
   json <- fromJSON(f) %>% as.data.frame
   data_transformed <- transform_data(json)
+  prediction <- voorspel_dga(data_transformed)
+  prediction$mForecast %>%
+    dplyr::distinct(UN, .keep_all = TRUE)
+}
+
+#* DGA  sleutelgas voorspelling voor transformatoren
+#* @param req  the request object
+#* @post /voorspelling_json_file
+function(req) {
+  # Read, transform and predict
+  result <- as.data.frame(lapply(jsonlite::fromJSON(req$postBody), unlist))
+  data_transformed <- transform_data(result)
   prediction <- voorspel_dga(data_transformed)
   prediction$mForecast %>%
     dplyr::distinct(UN, .keep_all = TRUE)

@@ -19,7 +19,7 @@ controleer_features <- function(df){
 
   columns_to_be_removed <- colnames(df)[!colnames(df) %in% features_model]
   if (length(columns_to_be_removed) > 0){
-    df <- df %>% select(-columns_to_be_removed)
+    df <- df %>% select(-all_of(columns_to_be_removed))
   }
   
   df <- df[, features_model]
@@ -34,6 +34,9 @@ voorspel <- function(data_xgboost, Y){
 
   # controleer features
   mPredict_data <- controleer_features(mPredict_data)
+  
+  # mPredict_data %>% as.data.frame() %>% 
+  #   saveRDS(file = paste0('api_voorspel_data_',Y,'.rds'))
   forecast <- voorspelling_2_numeric(predict(bst, mPredict_data), Y = Y)
   return(list(Model = bst, voorspelling = forecast))
 }

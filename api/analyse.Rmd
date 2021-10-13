@@ -1,0 +1,89 @@
+---
+title: "Vragen DGA tool tbv ontwikkeling API"
+output: pdf_document
+---
+
+```{r setup}
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(xgboost)
+library(ggplot2)
+
+
+# * @filter logger
+# function(req, res){
+#   cat(as.character(Sys.time()), "-",
+#       req$REQUEST_METHOD, req$PATH_INFO, "-",
+#       req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR, "\n", append=TRUE,
+#       file="/log/api_logs.txt")
+#   plumber::forward()
+# }
+```
+
+## Vragen
+
+```{r}
+load("./VoorspelDGA_V3.0.1/data_raw/Stedin_data_parsed.RData")
+load("./VoorspelDGA_V3.0.1/data_raw/TenneT_data_parsed.RData")
+load("./VoorspelDGA_V3.0.1/data_raw/Enexis_data_parsed.RData")
+
+# Welke merken staat het model toe?
+dput(unique(c(unique(mDf_tennet$Merk), unique(mDf_enexis$Merk), unique(mDf_stedin$Merk))))
+
+# Welke oliesoorten staat het model toe?
+dput(unique(c(unique(mDf_tennet$OlieSoort), unique(mDf_enexis$OlieSoort), unique(mDf_stedin$OlieSoort))))
+
+# Zijn de serienummers uniek?
+which(unique(mDf_tennet$SerieNr.) %in% unique(mDf_stedin$SerieNr.))
+which(unique(mDf_tennet$SerieNr.) %in% unique(mDf_enexis$SerieNr.))
+which(unique(mDf_stedin$SerieNr.) %in% unique(mDf_enexis$SerieNr.))
+which(unique(mDf_stedin$SerieNr.) %in% unique(mDf_tennet$SerieNr.))
+which(unique(mDf_enexis$SerieNr.) %in% unique(mDf_stedin$SerieNr.))
+which(unique(mDf_enexis$SerieNr.) %in% unique(mDf_tennet$SerieNr.))
+
+# Hoeveel metingen zijn er gebruikt?
+nrow(mDf_enexis) + nrow(mDf_tennet) + nrow(mDf_stedin)
+
+mDf_enexis %>% select(SerieNr., Datum, H2, CH4, C2H6, C2H4, C2H2) %>%
+  pivot_longer(cols=c(H2:C2H2)) %>%
+  ggplot(aes(name, log(value))) + geom_boxplot(outlier.alpha = 0.1) +
+  ggtitle("Gemeten waarden")
+
+mDf_enexis %>% select(SerieNr., Datum, H2, CH4, C2H6, C2H4, C2H2) %>%
+  pivot_longer(cols=c(H2:C2H2)) %>%
+  group_by(name) %>%
+  summarise(mean = mean(value),
+            sd  = sd(value),
+            median = median(value))
+      
+```
+
+Voorspelde waarden?
+
+```{r}
+readRDS('VoorspelDGA_V3.0.1/data_raw/forecast_dga.rds') %>%
+  pivot_longer(cols=c(H2:Risico)) %>%
+  mutate(value = as.numeric(value)) %>%
+  ggplot(aes(name, log(value))) + geom_boxplot(outlier.alpha = 0.1) +
+  ggtitle("Voorspelde waarden")
+
+
+```
+
+Waarom zien we een voorspelde waarde voor elke meting? 
+Waarom verschillen de waarden per serienummer?
+Voor wanneer wordt een voorspelling gedaan (meetintervallen per transformator zijn verschillend)
+
+```{r}
+head(readRDS('VoorspelDGA_V2.3.4/data_raw/voorspelling.rds')[[1]])
+
+nrow(readRDS('VoorspelDGA_V2.3.4/data_raw/voorspelling.rds')[[1]])
+```
+
+Hoe komen de modellen tot stand?
+Hoe bepalen we het risico van een transformator? Hoe is dit te herleiden uit de voorspelling?
+
+# Vragen na nieuwe versie modellen
+
+
