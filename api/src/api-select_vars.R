@@ -4,35 +4,17 @@ select_vars <- function(data) {
   
   vDim_string_numeric <-
     dim(data[c(
-      'C3H8_propaan_ul_p_l',
-      'C3H6_propeen_ul_p_l',
       'C4H10n_norm_butaan_ul_p_l',
-      'C4H10i_iso_butaan_ul_p_l',
-      'CO2_kooldioxide_ul_p_l',
-      'O2_zuurstof_ul_p_l',
-      'N2_stikstof_ul_p_l',
-      'zuurgetal_g_KOH_p_kg'
+      'C4H10i_iso_butaan_ul_p_l'
     )])
   # Remove string and make numeric
   data[c(
-    'C3H8_propaan_ul_p_l',
-    'C3H6_propeen_ul_p_l',
     'C4H10n_norm_butaan_ul_p_l',
-    'C4H10i_iso_butaan_ul_p_l',
-    'CO2_kooldioxide_ul_p_l',
-    'O2_zuurstof_ul_p_l',
-    'N2_stikstof_ul_p_l',
-    'zuurgetal_g_KOH_p_kg'
+    'C4H10i_iso_butaan_ul_p_l'
   )] <-
     matrix(as.numeric(gsub("<", "", as.matrix(data[c(
-      'C3H8_propaan_ul_p_l',
-      'C3H6_propeen_ul_p_l',
       'C4H10n_norm_butaan_ul_p_l',
-      'C4H10i_iso_butaan_ul_p_l',
-      'CO2_kooldioxide_ul_p_l',
-      'O2_zuurstof_ul_p_l',
-      'N2_stikstof_ul_p_l',
-      'zuurgetal_g_KOH_p_kg'
+      'C4H10i_iso_butaan_ul_p_l'
     )]))),
     nrow =
       vDim_string_numeric[1], ncol = vDim_string_numeric[2])

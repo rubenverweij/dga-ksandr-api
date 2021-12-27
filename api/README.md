@@ -30,6 +30,7 @@ curl --data @test_metingen.json  http://127.0.0.1:8000/voorspelling_json_file
 
 Het format van de json in de POST request:
 
+
 ```json
 [{
         "H2": 5.4,
@@ -43,14 +44,8 @@ Het format van de json in de POST request:
         "Bouwjaar": "1978",
         "OlieSoort": "Diala B",
         "Datum": "20040527",
-        "C3H8_propaan_ul_p_l": 4.3,
-        "C3H6_propeen_ul_p_l": 3.1,
         "C4H10n_norm_butaan_ul_p_l": 1.7,
-        "C4H10i_iso_butaan_ul_p_l": 1,
-        "CO2_kooldioxide_ul_p_l": 1280,
-        "O2_zuurstof_ul_p_l": "NA",
-        "N2_stikstof_ul_p_l": "NA",
-        "zuurgetal_g_KOH_p_kg": 0.02
+        "C4H10i_iso_butaan_ul_p_l": 1
     }, {
         "H2": 10.7,
         "CH4": 4.1,
@@ -63,14 +58,8 @@ Het format van de json in de POST request:
         "Bouwjaar": "1978",
         "OlieSoort": "Diala B",
         "Datum": "20010712",
-        "C3H8_propaan_ul_p_l": 4.8,
-        "C3H6_propeen_ul_p_l": 3.7,
         "C4H10n_norm_butaan_ul_p_l": 1.5,
-        "C4H10i_iso_butaan_ul_p_l": 1,
-        "CO2_kooldioxide_ul_p_l": 2070,
-        "O2_zuurstof_ul_p_l": "NA",
-        "N2_stikstof_ul_p_l": "NA",
-        "zuurgetal_g_KOH_p_kg": "NA"
+        "C4H10i_iso_butaan_ul_p_l": 1
     }, {
         "H2": 5.6,
         "CH4": 3,
@@ -83,14 +72,8 @@ Het format van de json in de POST request:
         "Bouwjaar": "7806",
         "OlieSoort": "Diala B",
         "Datum": "20030321",
-        "C3H8_propaan_ul_p_l": 4.7,
-        "C3H6_propeen_ul_p_l": 3.4,
         "C4H10n_norm_butaan_ul_p_l": 1.4,
-        "C4H10i_iso_butaan_ul_p_l": 1,
-        "CO2_kooldioxide_ul_p_l": 1710,
-        "O2_zuurstof_ul_p_l": "NA",
-        "N2_stikstof_ul_p_l": "NA",
-        "zuurgetal_g_KOH_p_kg": "NA"
+        "C4H10i_iso_butaan_ul_p_l": 1
     }, {
         "H2": 7.5,
         "CH4": 3.7,
@@ -103,14 +86,8 @@ Het format van de json in de POST request:
         "Bouwjaar": "7806",
         "OlieSoort": "Diala B",
         "Datum": "20020626",
-        "C3H8_propaan_ul_p_l": 4.5,
-        "C3H6_propeen_ul_p_l": 3.6,
         "C4H10n_norm_butaan_ul_p_l": 1.8,
-        "C4H10i_iso_butaan_ul_p_l": 1,
-        "CO2_kooldioxide_ul_p_l": 2150,
-        "O2_zuurstof_ul_p_l": "NA",
-        "N2_stikstof_ul_p_l": "NA",
-        "zuurgetal_g_KOH_p_kg": "NA"
+        "C4H10i_iso_butaan_ul_p_l": 1
     }
 ]
 ```

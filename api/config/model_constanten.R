@@ -11,14 +11,8 @@ verwachte_kolommen <- c(
   "Bouwjaar",
   "OlieSoort",
   "Datum",
-  "C3H8_propaan_ul_p_l",
-  "C3H6_propeen_ul_p_l",
   "C4H10n_norm_butaan_ul_p_l",
-  "C4H10i_iso_butaan_ul_p_l",
-  "CO2_kooldioxide_ul_p_l",
-  "O2_zuurstof_ul_p_l",
-  "N2_stikstof_ul_p_l",
-  "zuurgetal_g_KOH_p_kg"
+  "C4H10i_iso_butaan_ul_p_l"
 )
 
 # dit zijn volgens de modellen de toegestane merken
