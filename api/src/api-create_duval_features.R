@@ -2,6 +2,7 @@ library(tidyr)
 
 create_duval_features <- function(data) {
   df <- data
+  df <- subset(df, !(H2 == "NA" | CH4 == "NA" | C2H6 == "NA" | C2H4 == "NA" | C2H2 == "NA" ))
   
   ## Deze waardes kunnen universeel (i.e., voor elk bedrijf) worden gebruikt en zijn bepaald via de literatuur van Duval.
   # Let wel, deze variablen zijn eigenlijk zeer belangrijk en dienen tijdens het testen van de voorspellingen eventueel te worden meegenomen
@@ -44,23 +45,26 @@ create_duval_features <- function(data) {
   
 
   df[, 'Datum'] <-
-    as.Date(df[, 'Datum', drop = TRUE], format = "%Y%m%d")
+    as.Date.character(df[, 'Datum', drop = TRUE], format = "%Y%m%d")
   df[, 'Datum'] <-
     strftime(df[, 'Datum', drop = TRUE], "%d-%m-%Y")
   df[, 'Datum'] <-
     as.Date(as.character(df[, 'Datum', drop = TRUE]), "%d-%m-%Y")
   df <- subset(df, Datum >= as.Date("2000-01-01"))
+  
+  
+  df <-df[order(df[, 'SerieNr.', drop = TRUE], as.Date(df[, 'Datum', drop = TRUE], format ="%d-%m-%Y")), ]
 
-  # df <-
-  #   within(df, Bouwjaar[!is.na(Bouwjaar) &
-  #                         substr(Bouwjaar, 1, 2) < 30] <-
-  #            paste("20", substr(Bouwjaar[!is.na(Bouwjaar) &
-  #                                          substr(Bouwjaar, 1, 2) < 30] , 1, 2), sep = ""))
-  # df <-
-  #   within(df, Bouwjaar[!is.na(Bouwjaar) &
-  #                         substr(Bouwjaar, 1, 2) >= 30] <-
-  #            paste("19", substr(Bouwjaar[!is.na(Bouwjaar) &
-  #                                          substr(Bouwjaar, 1, 2) >= 30] , 1, 2), sep = ""))
+  df <-
+    within(df, Bouwjaar[!is.na(Bouwjaar) &
+                          substr(Bouwjaar, 1, 2) < 30] <-
+             paste("20", substr(Bouwjaar[!is.na(Bouwjaar) &
+                                           substr(Bouwjaar, 1, 2) < 30] , 1, 2), sep = ""))
+  df <-
+    within(df, Bouwjaar[!is.na(Bouwjaar) &
+                          substr(Bouwjaar, 1, 2) >= 30] <-
+             paste("19", substr(Bouwjaar[!is.na(Bouwjaar) &
+                                           substr(Bouwjaar, 1, 2) >= 30] , 1, 2), sep = ""))
   
   df <- df %>% arrange(SerieNr., Datum)
   df['UN'] <- df$SerieNr.
@@ -421,6 +425,7 @@ create_duval_features <- function(data) {
     within(df, P90[!is.na(P90) &
                      C2H2 <= P90C2H2] <-
              paste(P90[!is.na(P90) & C2H2 <= P90C2H2], ", C2H2"))
+  
   df <- within(df, P90[is.na(P90) & C2H2 <= P90C2H2] <- "C2H2")
   df <-
     within(df, P90[!is.na(P90) &

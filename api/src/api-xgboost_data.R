@@ -42,6 +42,7 @@ xgboost_data <- function(full_data, Y){
   }
 
   full_data <- set_colum_types(full_data)
+  colnames(full_data) <- stringr::str_trim(colnames(full_data))
   set.seed(42)
   rows <- sample(nrow(full_data))
   full_data <- full_data[rows, ]

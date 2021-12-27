@@ -19,9 +19,10 @@ voorspel_dga <- function(data) {
   # Risico model
   model_name <- paste0('../models/duval.model')
   bst <- xgb.load(model_name)
+  mData_xg_risico$mTest_data <- controleer_features(mData_xg_risico$mTest_data)
   forecast_categorical <- predict(bst, mData_xg_risico$mTest_data)
   # Index
-  indec <- mData_xg_h2$UN
+  indec <- stringr::str_trim(as.character(mData_xg_h2$UN))
   
   # Return output with UN
   mForecast <-
