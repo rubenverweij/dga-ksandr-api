@@ -121,12 +121,12 @@ De response (ppm waarden voor de sleutelgassen en een risicoscore per serienumme
 [
   {
     "UN": "219199",
-    "H2": 9.9805,
-    "CH4": 4.414,
-    "C2H6": 2.7289,
-    "C2H4": 2.4367,
-    "C2H2": 2.0071,
-    "Risico": 0
+    "H2": 7.2728,
+    "CH4": 2.999,
+    "C2H6": 2.3582,
+    "C2H4": 1.902,
+    "C2H2": 1.3288,
+    "Risico": 0.08
   }
 ]
 ```
