@@ -69,7 +69,7 @@ Het format van de json in de POST request:
         "CO": 80,
         "SerieNr.": "219199",
         "Merk": "Smit",
-        "Bouwjaar": "7806",
+        "Bouwjaar": "1978",
         "OlieSoort": "Diala B",
         "Datum": "20030321",
         "C4H10n_norm_butaan_ul_p_l": 1.4,
@@ -83,7 +83,7 @@ Het format van de json in de POST request:
         "CO": 126,
         "SerieNr.": "219199",
         "Merk": "Smit",
-        "Bouwjaar": "7806",
+        "Bouwjaar": "1978",
         "OlieSoort": "Diala B",
         "Datum": "20020626",
         "C4H10n_norm_butaan_ul_p_l": 1.8,
@@ -98,12 +98,12 @@ De response (ppm waarden voor de sleutelgassen en een risicoscore per serienumme
 [
   {
     "UN": "219199",
-    "H2": 7.2728,
-    "CH4": 2.999,
-    "C2H6": 2.3582,
-    "C2H4": 1.902,
-    "C2H2": 1.3288,
-    "Risico": 0.08
+    "H2": 9.9805,
+    "CH4": 4.414,
+    "C2H6": 2.7332,
+    "C2H4": 2.4367,
+    "C2H2": 2.0071,
+    "Risico": 0
   }
 ]
 ```

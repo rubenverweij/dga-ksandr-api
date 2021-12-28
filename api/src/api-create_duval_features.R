@@ -55,16 +55,16 @@ create_duval_features <- function(data) {
   
   df <-df[order(df[, 'SerieNr.', drop = TRUE], as.Date(df[, 'Datum', drop = TRUE], format ="%d-%m-%Y")), ]
 
-  df <-
-    within(df, Bouwjaar[!is.na(Bouwjaar) &
-                          substr(Bouwjaar, 1, 2) < 30] <-
-             paste("20", substr(Bouwjaar[!is.na(Bouwjaar) &
-                                           substr(Bouwjaar, 1, 2) < 30] , 1, 2), sep = ""))
-  df <-
-    within(df, Bouwjaar[!is.na(Bouwjaar) &
-                          substr(Bouwjaar, 1, 2) >= 30] <-
-             paste("19", substr(Bouwjaar[!is.na(Bouwjaar) &
-                                           substr(Bouwjaar, 1, 2) >= 30] , 1, 2), sep = ""))
+  # df <-
+  #   within(df, Bouwjaar[!is.na(Bouwjaar) &
+  #                         substr(Bouwjaar, 1, 2) < 30] <-
+  #            paste("20", substr(Bouwjaar[!is.na(Bouwjaar) &
+  #                                          substr(Bouwjaar, 1, 2) < 30] , 1, 2), sep = ""))
+  # df <-
+  #   within(df, Bouwjaar[!is.na(Bouwjaar) &
+  #                         substr(Bouwjaar, 1, 2) >= 30] <-
+  #            paste("19", substr(Bouwjaar[!is.na(Bouwjaar) &
+  #                                          substr(Bouwjaar, 1, 2) >= 30] , 1, 2), sep = ""))
   
   df <- df %>% arrange(SerieNr., Datum)
   df['UN'] <- df$SerieNr.
