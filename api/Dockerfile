@@ -9,7 +9,7 @@ RUN R -e "remotes::install_version('plyr', version='1.8.6')"
 RUN R -e "remotes::install_version('jsonlite', version='1.7.2')"
 RUN R -e "remotes::install_version('data.table', version='1.14.0')"
 RUN R -e "remotes::install_version('lubridate', version='1.7.10')"
-RUN R -e "remotes::install_version('stringr', version='1.4.0')"
+RUN R -e "install.packages('stringr')"
 ADD src /src
 ADD log /log
 ADD config /config
